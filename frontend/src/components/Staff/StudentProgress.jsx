@@ -118,6 +118,8 @@ const StudentProgress = ({ studentData, topics, subjectId, onUpdate }) => {
                             const prog = selectedStudent.progressDocs.find(p => p.topicId === topic._id);
                             const coverage = prog ? prog.completionPercentage : 0;
                             const confidence = prog ? prog.confidenceLevel : 'Not Set';
+                            const score = prog && prog.assessmentScore !== null ? prog.assessmentScore : null;
+                            const passed = prog ? prog.assessmentPassed : false;
 
                             let confColor = "text-gray-400";
                             if (confidence === 'High') confColor = "text-green-600";
@@ -125,20 +127,30 @@ const StudentProgress = ({ studentData, topics, subjectId, onUpdate }) => {
                             if (confidence === 'Low') confColor = "text-red-600";
 
                             return (
-                                <div key={topic._id} className="border p-4 rounded hover:shadow-md transition">
+                                <div key={topic._id} className="border p-4 rounded hover:shadow-md transition bg-white">
                                     <h5 className="font-medium text-gray-800 mb-2">{topic.name}</h5>
-                                    <div className="mb-2">
+                                    <div className="mb-3">
                                         <div className="flex justify-between text-sm mb-1">
-                                            <span>Coverage</span>
-                                            <span>{coverage}%</span>
+                                            <span className="text-gray-500">Coverage</span>
+                                            <span className="font-medium text-gray-700">{coverage}%</span>
                                         </div>
-                                        <div className="w-full bg-gray-200 rounded-full h-2">
-                                            <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${coverage}%` }}></div>
+                                        <div className="w-full bg-gray-200 rounded-full h-1.5">
+                                            <div className="bg-indigo-500 h-1.5 rounded-full" style={{ width: `${coverage}%` }}></div>
                                         </div>
                                     </div>
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span>Confidence:</span>
+                                    <div className="flex justify-between items-center text-sm mb-2 border-b pb-2">
+                                        <span className="text-gray-500">Confidence:</span>
                                         <span className={`font-bold ${confColor}`}>{confidence}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="text-gray-500">Assessment:</span>
+                                        {score !== null ? (
+                                            <span className={`font-bold flex items-center gap-1 ${passed ? 'text-green-600' : 'text-red-500'}`}>
+                                                {score.toFixed(1)}% {passed ? '✅' : '❌'}
+                                            </span>
+                                        ) : (
+                                            <span className="text-gray-400 italic text-xs">Not taken</span>
+                                        )}
                                     </div>
                                 </div>
                             );

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { LogOut, Book, TrendingUp, Award, Flame, Lock, CheckCircle, AlertTriangle, Download, ExternalLink } from "lucide-react";
 import Logo from "../../components/Logo";
+import AssessmentView from "./AssessmentView";
 
 const StudentDashboard = () => {
     const { user, logout } = useAuth();
@@ -237,6 +238,7 @@ const StudentDashboard = () => {
                         onBack={() => setSelectedSubject(null)}
                         onUpdateProgress={updateProgress}
                         getTopicProgress={getTopicProgress}
+                        refreshData={() => { fetchDashboard(); fetchSubjectDetails(selectedSubject._id); }}
                     />
                 )}
             </main>
@@ -245,11 +247,25 @@ const StudentDashboard = () => {
 };
 
 // Learning Roadmap Component
-const LearningRoadmap = ({ subject, topics, materials, onBack, onUpdateProgress, getTopicProgress }) => {
+const LearningRoadmap = ({ subject, topics, materials, onBack, onUpdateProgress, getTopicProgress, refreshData }) => {
     const [selectedTopic, setSelectedTopic] = useState(null);
     const [editingProgress, setEditingProgress] = useState(null);
+    const [takingAssessment, setTakingAssessment] = useState(false);
 
     if (selectedTopic) {
+        if (takingAssessment) {
+            return (
+                <AssessmentView 
+                    topicId={selectedTopic._id} 
+                    onBack={() => setTakingAssessment(false)} 
+                    onAssessmentComplete={() => {
+                        setTakingAssessment(false);
+                        if (refreshData) refreshData();
+                    }} 
+                />
+            );
+        }
+
         const topicProgress = getTopicProgress(selectedTopic._id);
         const topicMaterials = materials.filter(m => m.topicId === selectedTopic._id);
 
@@ -303,19 +319,30 @@ const LearningRoadmap = ({ subject, topics, materials, onBack, onUpdateProgress,
                                     </select>
                                 </div>
                             </div>
-                            <button
-                                onClick={() => {
-                                    onUpdateProgress(
-                                        selectedTopic._id,
-                                        editingProgress?.completion ?? topicProgress.completionPercentage,
-                                        editingProgress?.confidence ?? topicProgress.confidenceLevel
-                                    );
-                                    setEditingProgress(null);
-                                }}
-                                className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
-                            >
-                                Save Progress
-                            </button>
+                            <div className="flex items-center gap-4">
+                                <button
+                                    onClick={() => {
+                                        onUpdateProgress(
+                                            selectedTopic._id,
+                                            editingProgress?.completion ?? topicProgress.completionPercentage,
+                                            editingProgress?.confidence ?? topicProgress.confidenceLevel
+                                        );
+                                        setEditingProgress(null);
+                                    }}
+                                    className="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
+                                >
+                                    Save Progress
+                                </button>
+                                {((editingProgress?.completion ?? topicProgress.completionPercentage) === 100 && 
+                                  (editingProgress?.confidence ?? topicProgress.confidenceLevel) === "High") && (
+                                    <button
+                                        onClick={() => setTakingAssessment(true)}
+                                        className="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition font-medium"
+                                    >
+                                        Take Assessment
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     ) : (
                         <div className="mb-8 p-6 bg-gray-100 rounded-xl text-center">
@@ -365,7 +392,7 @@ const LearningRoadmap = ({ subject, topics, materials, onBack, onUpdateProgress,
                     {topics.map((topic, index) => {
                         const topicProgress = getTopicProgress(topic._id);
                         const isLocked = !topicProgress.isUnlocked;
-                        const isCompleted = topicProgress.completionPercentage >= 70 && topicProgress.confidenceLevel === 'High';
+                        const isCompleted = topicProgress.assessmentPassed === true;
 
                         return (
                             <div

@@ -51,33 +51,9 @@ const updateProgress = async (req, res) => {
             });
         }
 
-        // --- Unlock Logic (Candy Crush Style) ---
-        // Condition: >= 70% coverage AND High Confidence
+        // --- Unlock Logic (Assessment Based) ---
+        // Next topic unlock is now handled by the assessment controller
         let unlockedNext = false;
-        if (progress.completionPercentage >= 70 && progress.confidenceLevel === 'High') {
-            // Find next topic in this subject
-            // Get all topics for subject, sorted by order
-            const topics = await Topic.find({ subjectId: topic.subjectId }).sort({ order: 1, createdAt: 1 });
-            const currentIndex = topics.findIndex(t => t._id.toString() === topicId);
-
-            if (currentIndex !== -1 && currentIndex < topics.length - 1) {
-                const nextTopic = topics[currentIndex + 1];
-                // Check if already unlocked
-                const nextProgress = await Progress.findOne({ studentId: req.user._id, topicId: nextTopic._id });
-                if (!nextProgress) {
-                    await Progress.create({
-                        studentId: req.user._id,
-                        topicId: nextTopic._id,
-                        isUnlocked: true
-                    });
-                    unlockedNext = true;
-                } else if (!nextProgress.isUnlocked) {
-                    nextProgress.isUnlocked = true;
-                    await nextProgress.save();
-                    unlockedNext = true;
-                }
-            }
-        }
 
         // --- Badge Logic ---
         // "Topic Master": >= 80% coverage + High confidence

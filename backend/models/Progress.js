@@ -8,6 +8,7 @@ const ProgressSchema = new mongoose.Schema({
     isUnlocked: { type: Boolean, default: false }, // If true, student can access this topic
     assessmentScore: { type: Number, default: null }, // Score in %
     isCertified: { type: Boolean, default: false }, // Badge earned for this topic
+    assessmentPassed: { type: Boolean, default: false } // Determines if next topic unblocks
 }, { timestamps: true });
 
 module.exports = mongoose.model('Progress', ProgressSchema);

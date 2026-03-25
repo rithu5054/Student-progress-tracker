@@ -23,6 +23,7 @@ app.use('/api/subjects', require('./routes/subjectRoutes'));
 app.use('/api/topics', require('./routes/topicRoutes'));
 app.use('/api/materials', require('./routes/materialRoutes'));
 app.use('/api/progress', require('./routes/progressRoutes'));
+app.use('/api/assessment', require('./routes/assessmentRoutes'));
 
 app.get('/', (req, res) => {
     res.send('API is running...');
