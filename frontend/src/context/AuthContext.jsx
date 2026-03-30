@@ -33,7 +33,14 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const apiURL = (import.meta.env.VITE_API_URL || "https://student-progress-tracker-r2cz.onrender.com").replace(/\/$/, "");
+            let apiURL = import.meta.env.VITE_API_URL || "https://student-progress-tracker-r2cz.onrender.com";
+            
+            // Safety check: If Vercel accidentally bakes in localhost, override it
+            if (apiURL.includes("localhost") && window.location.hostname !== "localhost") {
+                apiURL = "https://student-progress-tracker-r2cz.onrender.com";
+            }
+            
+            apiURL = apiURL.replace(/\/$/, "");
             const { data } = await axios.post(`${apiURL}/api/auth/login`, {
                 username,
                 password,
@@ -50,7 +57,13 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const apiURL = (import.meta.env.VITE_API_URL || "https://student-progress-tracker-r2cz.onrender.com").replace(/\/$/, "");
+            let apiURL = import.meta.env.VITE_API_URL || "https://student-progress-tracker-r2cz.onrender.com";
+            
+            if (apiURL.includes("localhost") && window.location.hostname !== "localhost") {
+                apiURL = "https://student-progress-tracker-r2cz.onrender.com";
+            }
+            
+            apiURL = apiURL.replace(/\/$/, "");
             const { data } = await axios.post(`${apiURL}/api/auth/register`, userData);
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data));
