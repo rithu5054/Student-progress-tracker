@@ -7,7 +7,8 @@ const generateToken = (id) => {
 };
 
 const registerUser = async (req, res) => {
-    const { username, password, name, role } = req.body;
+    let { username, password, name, role } = req.body;
+    username = username.toLowerCase();
 
     try {
         const userExists = await User.findOne({ username });
@@ -46,7 +47,7 @@ const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username: username.toLowerCase() });
 
         if (user && (await bcrypt.compare(password, user.password))) {
             res.json({
