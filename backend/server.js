@@ -13,9 +13,13 @@ app.use(express.json());
 app.use(cors());
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log(err));
+mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => console.log('✅ MongoDB Atlas Connected Successfully'))
+    .catch((err) => {
+        console.error('❌ MongoDB Connection Failed:', err.message);
+        process.exit(1); // Exit process on DB connection failure
+    });
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
