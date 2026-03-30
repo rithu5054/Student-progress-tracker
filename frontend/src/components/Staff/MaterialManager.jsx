@@ -18,7 +18,7 @@ const MaterialManager = ({ topics, onUpdate }) => {
 
     const fetchMaterials = async (topicId) => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/materials/${topicId}`);
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/materials/${topicId}`);
             setMaterials(data);
         } catch (error) {
             console.error(error);
@@ -30,7 +30,7 @@ const MaterialManager = ({ topics, onUpdate }) => {
         if (!selectedTopic) return alert("Select a topic first");
         setLoading(true);
         try {
-            await axios.post("http://localhost:5000/api/materials", {
+            await axios.post(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/materials`, {
                 ...formData,
                 topicId: selectedTopic
             });
@@ -48,7 +48,7 @@ const MaterialManager = ({ topics, onUpdate }) => {
     const handleDelete = async (id) => {
         if (!confirm("Delete this material?")) return;
         try {
-            await axios.delete(`http://localhost:5000/api/materials/${id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/materials/${id}`);
             fetchMaterials(selectedTopic);
         } catch (error) {
             console.error(error);

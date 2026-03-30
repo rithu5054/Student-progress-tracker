@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const { data } = await axios.post("http://localhost:5000/api/auth/login", {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/auth/login`, {
                 username,
                 password,
             });
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const { data } = await axios.post("http://localhost:5000/api/auth/register", userData);
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/auth/register`, userData);
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data));
             axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;

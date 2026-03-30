@@ -38,7 +38,7 @@ const StaffDashboard = () => {
 
     const fetchSubjects = async () => {
         try {
-            const { data } = await axios.get("http://localhost:5000/api/subjects");
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/subjects`);
             setSubjects(data);
             if (data.length > 0) setSelectedSubject(data[0]);
         } catch (error) {
@@ -49,7 +49,7 @@ const StaffDashboard = () => {
     const handleCreateSubject = async (e) => {
         e.preventDefault();
         try {
-            const { data } = await axios.post("http://localhost:5000/api/subjects", newSub);
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/subjects`, newSub);
             setSubjects([...subjects, data]);
             setSelectedSubject(data);
             setCreateSubjectModal(false);
@@ -63,11 +63,11 @@ const StaffDashboard = () => {
         if (!selectedSubject) return;
         try {
             // Fetch Topics
-            const topicsRes = await axios.get(`http://localhost:5000/api/topics/${selectedSubject._id}`);
+            const topicsRes = await axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/topics/${selectedSubject._id}`);
             setTopics(topicsRes.data);
 
             // Fetch Student Progress
-            const progressRes = await axios.get(`http://localhost:5000/api/progress/staff/${selectedSubject._id}`);
+            const progressRes = await axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/progress/staff/${selectedSubject._id}`);
             setStudentData(progressRes.data);
 
             calculateStats(topicsRes.data, progressRes.data);

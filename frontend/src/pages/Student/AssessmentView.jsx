@@ -16,7 +16,7 @@ const AssessmentView = ({ topicId, onBack, onAssessmentComplete }) => {
 
     const fetchAssessment = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/assessment/${topicId}`, {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/assessment/${topicId}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
             });
             setAssessment(res.data);
@@ -59,7 +59,7 @@ const AssessmentView = ({ topicId, onBack, onAssessmentComplete }) => {
         }
 
         try {
-            const res = await axios.post(`http://localhost:5000/api/assessment/submit`, {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/assessment/submit`, {
                 topicId,
                 answers,
                 questionIds: assessment.questions.map(q => q._id)

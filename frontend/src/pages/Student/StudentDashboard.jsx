@@ -28,10 +28,10 @@ const StudentDashboard = () => {
     const fetchDashboard = async () => {
         try {
             const [subjectsRes, statsRes] = await Promise.all([
-                axios.get("http://localhost:5000/api/subjects", {
+                axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/subjects`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }),
-                axios.get("http://localhost:5000/api/progress/stats", {
+                axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/progress/stats`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }),
             ]);
@@ -48,13 +48,13 @@ const StudentDashboard = () => {
         try {
             console.log("Fetching subject details for:", subjectId);
             const [topicsRes, progressRes, materialsRes] = await Promise.all([
-                axios.get(`http://localhost:5000/api/topics/subject/${subjectId}`, {
+                axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/topics/subject/${subjectId}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }),
-                axios.get(`http://localhost:5000/api/progress/student/${subjectId}`, {
+                axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/progress/student/${subjectId}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }),
-                axios.get(`http://localhost:5000/api/materials/subject/${subjectId}`, {
+                axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/materials/subject/${subjectId}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }),
             ]);
@@ -75,7 +75,7 @@ const StudentDashboard = () => {
     const updateProgress = async (topicId, completion, confidence) => {
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/progress",
+                `${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/progress`,
                 { topicId, completionPercentage: completion, confidenceLevel: confidence },
                 { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
             );

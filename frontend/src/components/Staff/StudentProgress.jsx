@@ -12,7 +12,7 @@ const StudentProgress = ({ studentData, topics, subjectId, onUpdate }) => {
         if (!newStudentUsername.trim()) return;
         setEnrollLoading(true);
         try {
-            await axios.post("http://localhost:5000/api/subjects/enroll", {
+            await axios.post(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/subjects/enroll`, {
                 subjectId,
                 username: newStudentUsername
             });

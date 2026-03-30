@@ -15,8 +15,8 @@ const StudentSubjectView = ({ subject, onBack }) => {
     const fetchTopicsAndProgress = async () => {
         try {
             const [topicsRes, progressRes] = await Promise.all([
-                axios.get(`http://localhost:5000/api/topics/${subject._id}`),
-                axios.get(`http://localhost:5000/api/progress/student/${subject._id}`)
+                axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/topics/${subject._id}`),
+                axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/progress/student/${subject._id}`)
             ]);
             setTopics(topicsRes.data);
             setProgressData(progressRes.data);
@@ -28,7 +28,7 @@ const StudentSubjectView = ({ subject, onBack }) => {
     const fetchMaterials = async (topicId) => {
         if (materials[topicId]) return; // Already fetched
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/materials/${topicId}`);
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/materials/${topicId}`);
             setMaterials(prev => ({ ...prev, [topicId]: data }));
         } catch (error) {
             console.error(error);
@@ -46,7 +46,7 @@ const StudentSubjectView = ({ subject, onBack }) => {
 
     const updateProgress = async (topicId, completion, confidence) => {
         try {
-            const { data } = await axios.post("http://localhost:5000/api/progress", {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/progress`, {
                 topicId,
                 completionPercentage: completion,
                 confidenceLevel: confidence

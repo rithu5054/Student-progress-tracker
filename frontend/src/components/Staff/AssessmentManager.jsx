@@ -15,7 +15,7 @@ const AssessmentManager = ({ topic, onBack }) => {
 
     const fetchAssessment = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/assessment/staff/${topic._id}`, {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/assessment/staff/${topic._id}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
             });
             if (data) {
@@ -72,7 +72,7 @@ const AssessmentManager = ({ topic, onBack }) => {
         }
 
         try {
-            await axios.post(`http://localhost:5000/api/assessment/create`, {
+            await axios.post(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/assessment/create`, {
                 topicId: topic._id,
                 passingMarks,
                 timeLimit,

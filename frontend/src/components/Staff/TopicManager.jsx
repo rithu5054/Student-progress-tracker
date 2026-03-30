@@ -15,7 +15,7 @@ const TopicManager = ({ subjectId, topics, onUpdate }) => {
 
     const fetchAssessmentsStatus = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/assessment/subject/${subjectId}`, {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/assessment/subject/${subjectId}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
             });
             setAssessmentIds(data.assessmentTopicIds || []);
@@ -29,7 +29,7 @@ const TopicManager = ({ subjectId, topics, onUpdate }) => {
         if (!newTopic.trim()) return;
         setLoading(true);
         try {
-            await axios.post("http://localhost:5000/api/topics", {
+            await axios.post(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/topics`, {
                 name: newTopic,
                 subjectId,
             });
@@ -46,7 +46,7 @@ const TopicManager = ({ subjectId, topics, onUpdate }) => {
     const handleDelete = async (id) => {
         if (!confirm("Are you sure? This will delete all materials and progress for this topic.")) return;
         try {
-            await axios.delete(`http://localhost:5000/api/topics/${id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL || 'https://student-progress-tracker-r2cz.onrender.com'}/api/topics/${id}`);
             onUpdate();
         } catch (error) {
             console.error(error);
